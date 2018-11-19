@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <style>
+        body {
+          height: 3000px;
+          background-color: #eb64a7;   
+        }
+        #btn {
+            padding: 5px;
+            font-size: 20px;
+            cursor: pointer;
+            
+        }
+    </style>
+    <script src="./js/popLayer.js"></script>
+</head>
+<body>
+    <button id="btn">🍓点击</button>
+    <script>
+        const OPTIONS = {
+            width:200,
+            height:300
+        }
+        let target = popLayer.createLayer(OPTIONS);
+        document.getElementById('btn').addEventListener('click', ()=>{
+            popLayer.pop();
+        })
+    </script>
+</body>
+</html>

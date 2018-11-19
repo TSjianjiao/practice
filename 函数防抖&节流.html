@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            height: 3000px;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        const scrollFn = debounce((e)=>{console.log(e)}, 500)
+        window.onscroll = (e)=>(scrollFn(e))
+
+        const resizeFn = throttle((e)=>{console.log(e)}, 1000);
+        window.onresize = (e)=>{resizeFn(e)}
+        // 函数节流
+        function throttle(fn, delay) {
+            let timerId;
+            let last;
+            return function () {
+                const _this = this;
+                const args = [...arguments];
+                const now = Date.now();
+                if(last && now < last + delay) {
+                    clearTimeout(timerId);
+                    timerId =  setTimeout(()=>{
+                        last = now;
+                        fn.apply(_this, args)
+                    }, delay)
+                }else {
+                    last = now;
+                    fn.apply(_this, args);
+                }
+            }
+        }
+        // 函数防抖
+        function debounce(fn, delay) {  
+            let timerId;
+            return function () {  
+                const _this = this;
+                const args = [...arguments];
+                clearTimeout(timerId);
+                timerId = setTimeout(()=>fn.apply(_this, arguments), delay)
+            }
+        }
+    </script>
+</body>
+
+</html>

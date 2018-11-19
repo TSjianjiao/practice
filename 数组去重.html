@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        input {
+            outline: none;
+            border: 1px solid #cccc;
+        }
+        #tip {
+            color: #f00;
+        }
+
+    
+    </style>
+</head>
+<body>
+    <input type="text" placeholder="输入" id="arr-input"><span id="tip"></span>
+    <br>
+    <br>
+    <br>
+    <input type="text" placeholder="结果" readonly id="res-input">
+    <script>
+        let arrInput = document.getElementById('arr-input');
+        let resInput = document.getElementById('res-input');
+        let tip = document.getElementById('tip');
+        arrInput.addEventListener('blur', ()=>{
+            let input = '';
+            input = arrInput.value;
+            // 字符串转数组
+            let res = StrToArr(input);
+
+            
+            // 去重
+            res = RemoveRepeat(res);
+
+
+            // 将数组转为字符串，加上中括号
+            res = ArrToStr(res, ()=>{
+                arrInput.style.borderColor = "#f00";
+                tip.innerText = '不是数组，加中括号';
+            });
+            resInput.value = res;
+        })
+        arrInput.addEventListener('focus', ()=>{
+            arrInput.removeAttribute('style')
+            tip.innerHTML = ''
+        })
+        /**
+        *数组字符串转数组
+        */
+        function StrToArr(str, errorCallBack = ()=>{}) {
+            let arr = [];
+            let len = str.length;
+            // 简单判断是不是数组 判断前后有没有中括号
+            if(str.indexOf('[')>-1 && str.lastIndexOf(']') === len - 1) {
+                // 去掉中括号，并变成数组
+                arr = str.slice(1, len-1).split(',')
+                // 将纯数字字符串转为数字
+                arr = arr.map(item=>{
+                    let res = 0
+                    return res = isNaN(item) ? item : Number(item)
+                })
+            }else {
+                errorCallBack();
+                return
+            }
+            return arr
+        }
+
+        /**
+        *数组转为字符串
+        */
+        function ArrToStr(arr, errorCallBack = ()=>{}) {
+            let res = '';
+            if(arr instanceof Array) {
+                res = `[${arr.toString()}]`
+            }else {
+                errorCallBack();
+                return
+            }
+            return res
+        }
+
+        /**
+        *数组去重
+        */
+        function RemoveRepeat(inputArr) {
+            let arr = [];
+            
+            if(inputArr instanceof Array) {
+                // 保存数组
+                arr = inputArr.slice(0);
+                let len = arr.length;
+                // 方法一
+                // // 利用对象的特点，重复键名会被替换
+                // let obj = {};
+                // arr.forEach(item =>{
+                //     // 去除字符串前后空格
+                //     item = item.trim ? item.trim() : item;
+                //     obj[item] = '随便什么值'
+                // })
+                // // 键值就是去重后的数组
+                // arr = Object.keys(obj).map(item=>{
+                //     let val = 0;
+                //     return val = isNaN(item) ? item : Number(item)
+                // });
+
+                // 方法二
+                arr = arr.filter((item, index, self)=>{
+                    return self.indexOf(item) === index
+                })
+                // 方法三
+                // 去重 [...new Set(arr)]
+            }else {
+                console.error('输入数组')
+                return
+            }
+            return arr
+        }
+    </script>
+</body>
+</html>

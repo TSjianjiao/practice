@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body,
+        input,
+        ul,
+        p {
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            list-style: none;
+        }
+        a {
+            text-decoration: none;
+            color: #525252ee;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .clearfix::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 0;
+            clear: both;
+        }
+        #main {
+            width: 400px;
+            height: 500px;
+            margin: 0 auto;
+            border-top: solid 1px transparent;
+            background-color: #57dda5;
+        }
+        #search {
+            position: relative;
+            width: 80%;
+            height: 50px;
+            margin: 20px auto;
+            background-color: #fff;
+        }
+        #search input {
+            width: 100%;
+            height: inherit;
+            border: none;
+            text-indent: 2em;
+        }
+        #search #tip {
+            height: 408px;
+            background-color: #eee;
+            overflow: hidden;
+        }
+        #search #tip li {
+            height: 20px;
+            padding: 10px 0;
+            border-bottom: 1px solid #fff;
+            background-color: #eee;
+            text-indent: 2em;
+            color: #525252ee;
+            cursor: pointer;
+        }
+        #search #tip li:hover {
+            background-color: #fff;
+        }
+        #search button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            border: none;
+            height: inherit;
+            width: 50px;
+            background-color: #eee;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .off {
+            display: none;
+        }
+        #last-search {
+            width: 80%;
+            margin: 0 auto;
+            padding: 5px 10px;
+            background-color: #fff;
+        }
+        #last-search>p {
+            color: #525252ee;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        #last-search li {
+            float: left;
+            background-color: #eee;
+            padding: 5px;
+            margin-left: 5px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main">
+        <div id="search">
+            <input type="text" placeholder="请输入搜索商品">
+            <button>搜索</button>
+            <ul id="tip" class="off"></ul>
+        </div>
+        <div id="last-search">
+            <p>最近搜索</p>
+            <ul class="clearfix">
+
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let inputObj = document.querySelector('#search input');
+        let buttonObj = document.querySelector('#search button');
+        let historyListObj = document.querySelector('#last-search ul');
+        let tipObj = document.getElementById('tip');
+        window.addEventListener('load', () => renderHistory())
+        inputObj.addEventListener('keydown', e => {
+            if (e.keyCode === 13) {
+                // 设置搜索历史存储
+                setSearchHistory()
+                // 渲染搜索历史列表
+                renderHistory()
+            }
+        })
+        buttonObj.addEventListener('click', e => {
+            setSearchHistory()
+            renderHistory()
+        })
+
+        // 设置存储历史记录
+        function setSearchHistory() {
+            // 获取输入值
+            let text = inputObj.value.trim();
+            // 空字符串就返回
+            if(!text) return
+            console.log(text)
+            // 假设搜索结果url
+            let url = '#';
+            // 先获取存储的历史记录
+            let historyList = localStorage.getItem('searchHistory');
+            historyList = historyList ? JSON.parse(historyList) : [];
+            // 如果历史记录存满了(10条
+            if (historyList.length === 10) {
+                // 删除最后一条记录
+                historyList.pop();
+            }
+            // 查找是否已经存在记录
+            let foundHistory;
+            historyList.forEach((item, index) => {
+                if (item.text === text) {
+                    foundHistory = {
+                        item,
+                        index
+                    }
+                }
+            });
+            // 如果记录已经存在
+            if (foundHistory) {
+                // 将它删除
+                historyList.splice(foundHistory.index, 1);
+                text = foundHistory.item.text;
+                url = foundHistory.item.url;
+            }
+            // 将新纪录放到最前面
+            historyList.unshift({
+                text,
+                url
+            })
+            localStorage.setItem('searchHistory', JSON.stringify(historyList));
+        }
+
+        // 渲染历史记录列表
+        function renderHistory() {
+            // 获取存储数据
+            let history = JSON.parse(localStorage.getItem('searchHistory'));
+            // 历史记录为空就返回
+            if(!history) return
+            // 清空列表
+            historyListObj.innerHTML = '';
+            history.forEach(item => {
+                let li = document.createElement('li');
+                li.innerHTML = `<a href=${item.url}>${item.text}</a>`;
+                historyListObj.appendChild(li);
+                return li
+            })
+        }
+
+        // jsonp函数
+        function jsonp16(obj) {
+            tipObj.innerHTML = '';
+            tipObj.setAttribute('class', 'off');
+            // 有数据才显示
+            if(obj.result.length) {
+                tipObj.removeAttribute('class');
+                obj.result.forEach(item=>{
+                    let li = document.createElement('li');
+                    li.innerHTML = item[0];
+                    tipObj.appendChild(li);
+                })
+            }
+            // 移除script标签
+            let jsonp = document.querySelectorAll('.jsonp');
+            jsonp.forEach(item=>{
+                document.body.removeChild(item);
+            })
+        }
+        // 搜索提示
+        inputObj.addEventListener('input', (e)=>{
+            let input = e.target.value.trim();
+            let script = document.createElement('script');
+            script.src = `https://suggest.taobao.com/sug?q=${input}&code=utf-8&area=c2c&nick=&sid=null&callback=jsonp16`;
+            //设置class以便删除，无网络的时候script标签不会被删除
+            script.setAttribute('class', 'jsonp');
+            document.body.appendChild(script);
+        })
+    </script>
+</body>
+
+</html>

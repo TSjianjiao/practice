@@ -1,0 +1,61 @@
+<!doctype html>
+<html data-framework="vue">
+	<head>
+		<meta charset="utf-8">
+		<title>Vue.js • 待办事项</title>
+		<link rel="stylesheet" href="lib/todomvc-common/base.css">
+		<link rel="stylesheet" href="lib/todomvc-app-css/index.css">
+        <script src="./lib/vue/dist/vue.js"></script>
+	</head>
+	<body>
+        <div id="app">
+            <section class="todoapp">
+                <header class="header">
+                    <h1>待办事项</h1>
+                    <input class="new-todo" autofocus autocomplete="off" placeholder="需要做什么?" 
+                            v-model="newTodo" @keydown.enter="addNewTodo">
+                </header>
+                <section class="main">
+                    <input class="toggle-all" type="checkbox" v-model="allCompletd" @click="toggleAllCompletd"/>
+                    <ul class="todo-list">
+                        <li v-for="(todo, index) in todoList" 
+                            :class="{completed:todo.state, editing:todo.edit}"
+                            @dblclick="editing(index)"
+                            v-show="isShow(todo.state)">
+                            
+                            <div class="view">
+                                <input class="toggle" type="checkbox" v-model="todo.state">
+                                <label>{{ todo.content }}</label>
+                                <button class="destroy" @click="destroy(index)"></button>
+                            </div>
+                            <input class="edit" type="text" 
+                                v-model="todo.content" 
+                                @keydown.enter="todo.edit = false"
+                                @blur="todo.edit = false"
+                                v-todo-focus>
+                        </li>
+                    </ul>
+                </section>
+                <footer class="footer" >
+                    <span class="todo-count">
+                        <strong>还有 {{ uncompleted }} 个待办事项</strong>
+                    </span>
+                    <ul class="filters">
+                        <li><a href="" :class="{selected:whatToShow[0]}" @click.prevent="showAll(0)">全部</a></li>
+                        <li><a href="" :class="{selected:whatToShow[1]}" @click.prevent="showActive(1)">活动</a></li>
+                        <li><a href="" :class="{selected:whatToShow[2]}" @click.prevent="showCompleted(2)">已完成</a></li>
+                    </ul>
+                    <button class="clear-completed" @click="clearCompleted">
+                        删除已完成
+                    </button>
+                </footer>
+            </section>
+            <footer class="info">
+                <p>Double-click to edit a todo</p>
+                <p>Written by <a href="#">me</a></p>
+                <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+            </footer>
+        </div>
+        <script src="./js/main.js"></script>
+	</body>
+</html>

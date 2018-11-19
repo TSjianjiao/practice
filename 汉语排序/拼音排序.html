@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./js/pinyin.js"></script>
+    <style>
+        li{
+            list-style: none;
+        }
+    </style>
+</head>
+
+<body>
+    <ul id="city"></ul>
+    <script>
+        let pinYin = new Pinyin({ charCase: 0 });
+        let xhr = new XMLHttpRequest();
+        let cityUl = document.getElementById('city');
+        xhr.open('get', './data.json');
+        xhr.onreadystatechange = () => {
+            let res = {};
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                let data = JSON.parse(xhr.responseText);
+                // 保存第一个拼音
+                let firstList = []
+                data.forEach(item=>{
+                    let char = item.cityName;
+                    // 获取第一个拼音
+                    let firstLetter = pinYin.getFullChars(char).substr(0, 1);
+                    // 按字母存储
+                    if(!res[firstLetter]) {
+                        res[firstLetter] = [char];
+                        firstList.push(firstLetter);
+                    }else {
+                        res[firstLetter].push(char)
+                    }
+                });
+                // 首字母排序
+                firstList = firstList.sort((a, b)=>a.localeCompare(b, 'zh'));
+                // 输出显示到页面
+                let fragment = document.createDocumentFragment();
+                firstList.forEach(letter=>{
+                    let li = document.createElement('li');
+                    li.innerHTML = `${letter}:${res[letter]}`
+                    fragment.appendChild(li);
+                })
+                cityUl.appendChild(fragment)
+            }
+                
+        }
+        xhr.send()
+    </script>
+</body>
+
+</html>

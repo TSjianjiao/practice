@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body,
+        ul {
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            list-style: none;
+        }
+        .clearfix::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 0;
+            clear: both;
+        }
+        #region {
+            position: relative;
+            width: 400px;
+            margin: 10px auto;
+        }
+        /* 内容 */
+        #content {
+            float: left;
+            height: 600px;
+            width: 100%;
+            background-color: #32cfa8;
+            overflow: auto;
+        }
+        #content #main {
+            /* 这里设置定位，是为了title的offsetTop正确 */
+            position: relative;
+            transition: top 0.5s ease-in-out;
+        }
+        #content .title {
+            height: 30px;
+            line-height: 30px;
+            background-color: #32aacf;
+        }
+        #content li {
+            cursor: pointer;
+        }
+        #content li:hover {
+            background-color: #fff;
+        }
+        /* 索引 */
+        #index {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 30px;
+            height: 600px;
+            background-color: #f87777;
+        }
+        #index ul {
+            position: relative;
+            top: 20%;
+            left: 0;
+        }
+        #index li {
+            padding-top: 10px;
+            text-align: center;
+            color: #eee;
+            cursor: pointer;
+        }
+        #index li.active {
+            color: #1a1919;
+        }
+    </style>
+</head>
+<body>
+    <div id="region" class="clearfix">
+        <!-- 内容 -->
+        <div id="content">
+            <div id="main"></div>
+        </div>
+        <!-- 索引 -->
+        <div id="index">
+        </div>
+    </div>
+    <script>
+        let data = [
+            {'C':'重庆'},
+            {'C':'重庆'},
+            {'C':'重庆'},
+            {'C':'重庆'},
+            {'C':'重庆'},
+            {'C':'重庆'},
+            {'C':'重庆'},
+            {'C':'重庆'},
+            {'I':'伊斯兰'},
+            {'A':'安徽'},
+            {'B':'北京'},
+            {'E':'鄂尔多斯'},
+            {'K':'开州'},
+            {'D':'东莞'},
+            {'F':'福州'},
+            {'G':'广州'},
+            {'I':'伊斯兰'},
+            {'A':'安徽'},
+            {'B':'北京'},
+            {'E':'鄂尔多斯'},
+            {'K':'开州'},
+            {'D':'东莞'},
+            {'F':'福州'},
+            {'G':'广州'},
+            {'I':'伊斯兰'},
+            {'A':'安徽'},
+            {'B':'北京'},
+            {'E':'鄂尔多斯'},
+            {'K':'开州'},
+            {'D':'东莞'},
+            {'F':'福州'},
+            {'G':'广州'},
+            {'I':'伊斯兰'},
+            {'A':'安徽'},
+            {'B':'北京'},
+            {'E':'鄂尔多斯'},
+            {'K':'开州'},
+            {'D':'东莞'},
+            {'F':'福州'},
+            {'G':'广州'},
+            {'I':'伊斯兰'},
+            {'A':'安徽'},
+            {'B':'北京'},
+            {'E':'鄂尔多斯'},
+            {'K':'开州'},
+            {'D':'东莞'},
+            {'F':'福州'},
+            {'G':'广州'},
+            {'I':'伊斯兰'},
+            {'A':'安徽'},
+            {'B':'北京'},
+            {'E':'鄂尔多斯'},
+            {'K':'开州'},
+            {'D':'东莞'},
+            {'F':'福州'},
+            {'G':'广州'},
+            {'I':'伊斯兰'},
+            {'A':'安徽'},
+            {'B':'北京'},
+            {'E':'鄂尔多斯'},
+            {'K':'开州'},
+            {'D':'东莞'},
+            {'F':'福州'},
+            {'G':'广州'},
+            {'I':'伊斯兰'},
+            {'A':'安徽'},
+            {'B':'北京'},
+            {'E':'鄂尔多斯'},
+            {'K':'开州'},
+            {'D':'东莞'},
+            {'F':'福州'},
+            {'G':'广州'},
+            {'I':'伊斯兰'},
+            {'A':'安徽'},
+            {'B':'北京'},
+            {'E':'鄂尔多斯'},
+            {'K':'开州'},
+            {'D':'东莞'},
+            {'F':'福州'},
+            {'G':'广州'},
+            {'I':'伊斯兰'},
+            {'A':'安徽'},
+            {'C':'崇州'},
+            {'C':'崇州'},
+            {'B':'北京'},
+            {'E':'鄂尔多斯'},
+            {'K':'开州'},
+            {'D':'东莞'},
+            {'F':'福州'},
+            {'G':'广州'},
+            {'C':'崇州'},
+            {'C':'崇州'},
+            {'C':'崇州'},
+            {'C':'崇州'},
+            {'C':'崇州'},
+            {'C':'崇州'},
+            {'C':'崇州'},
+            {'C':'崇州'},
+            {'C':'崇州'},
+            {'B':'白宫'},
+            {'F':'福建'},
+            {'C':'崇州'},
+            {'A':'安康'},
+            {'H': '韩国'},
+            {'J':'荆州'},
+            {'F':'福建'},
+            {'C':'崇州'},
+            {'A':'安康'},
+            {'H': '韩国'},
+            {'J':'荆州'},
+            {'F':'福建'},
+            {'C':'崇州'},
+            {'A':'安康'},
+            {'H': '韩国'},
+            {'J':'荆州'},
+            {'F':'福建'},
+            {'C':'崇州'},
+            {'A':'安康'},
+            {'H': '韩国'},
+            {'J':'荆州'},
+            {'F':'福建'},
+            {'C':'崇州'},
+            {'A':'安康'},
+            {'H': '韩国'},
+            {'J':'荆州'},
+            {'L':'梁山'},
+            {'K':'可口可乐'}];
+        // 结果数组对象
+        let res = [];
+        data.forEach(item=>{
+            // 获取键名
+            let letter = Object.keys(item)[0];
+            let ele;
+            // 如果结果数组里面没有当前的首字母
+            if(!res.some(item=>Object.keys(item)[0] === letter)) {
+                // 添加进去
+                ele = {};
+                ele[letter] = [item[letter]];
+                res.push(ele);
+            }else {
+                res.find(item => item[letter])[letter].push(item[letter])
+            } 
+        })
+        // 排序首字母数组
+        let firstCharArr = [];
+        res.forEach(item=>firstCharArr.push(Object.keys(item)[0]));
+        firstCharArr = firstCharArr.sort((a, b) => a.localeCompare(b))
+        console.log(res, firstCharArr)
+
+        // 渲染界面
+        let region = document.getElementById('region');
+        let content = document.getElementById('content');
+        let contentMain = document.getElementById('main');
+        let index = document.getElementById('index');
+
+        
+        let indexList = document.createElement('ul');
+        firstCharArr.forEach((item, index)=>{
+            // 渲染索引
+            let li = document.createElement('li');
+            li.innerHTML = item;
+            // 第一个默认高亮
+            if(index === 0) li.setAttribute('class', 'active');
+            indexList.appendChild(li);
+            // 渲染内容
+            let city = res.find(val=>val[item])[item];
+            renderContent(item, city)
+        })
+        index.appendChild(indexList);
+
+        // 渲染内容
+        // <div class="item">
+        //     <div class="title">B</div>
+        //     <ul class="city">
+        //         <li>北京</li>
+        //     </ul>
+        // </div>
+        function renderContent(title, city) {
+            let itemObj = document.createElement('div');
+            let titleObj = document.createElement('div');
+            let cityObj = document.createElement('ul');
+            itemObj.setAttribute('class', 'item');
+            titleObj.setAttribute('class', 'title');
+            cityObj.setAttribute('class', 'city');
+            titleObj.innerHTML = title;
+            city.forEach(item=>{
+                let li = document.createElement('li');
+                li.innerHTML = item;
+                cityObj.appendChild(li);
+            })
+            itemObj.appendChild(titleObj);
+            itemObj.appendChild(cityObj);
+            contentMain.appendChild(itemObj);
+        }
+        
+        // 点击索引跳转
+        let indexObjList = [...document.querySelectorAll('#index li')];
+        let titleObjList = [...document.querySelectorAll('#content .title')];
+        let itemObjList = [...document.querySelectorAll('.item')];
+        let curTop = 0;
+        let sTop = 0;
+        let timerID;
+        // 索引注册点击事件
+        indexList.addEventListener('click', (e)=>{
+            let curLi = e.target;
+            let curLiText = curLi.textContent;
+            // 清除之前的高亮
+            indexObjList.forEach(item=>item.removeAttribute('class'))
+            // 当前li设置高亮
+            curLi.setAttribute('class', 'active');
+            // 获取点击的li索引
+            let index = indexObjList.findIndex(item=> item == curLi);
+            // 获取对应索引的title位置
+            let titlePosition = titleObjList[index].offsetTop;
+
+            // 当发生滚动curTop、sTop存在
+            // 滚动距离 - 索引位置 = 目标位置
+            // if(curTop != 0 || sTop != 0) {
+            //     // contentMain.style.top = `${sTop - titlePosition}px`;
+            //     if(index === 0) {
+            //         // console.log(1)
+            //         // content.scrollTop = 0;
+            //         // contentMain.style.top = 0;
+            //     }else if(index === indexObjList.length - 1) {
+            //         // content.scrollTop = 99999999999;
+            //         // contentMain.style.top = -lastPosition + 'px';
+            //     }
+            // }else {
+                // contentMain.style.top = `-${titlePosition}px`;
+                let dis = 0;
+                clearInterval(timerID);
+                timerID = setInterval(()=>{
+                    if(dis >= titlePosition) {
+                        dis = titlePosition;
+                        clearInterval(timerID);
+                    }else {
+                        dis = dis + Math.floor(titlePosition/15)
+                    }
+                    content.scrollTop = dis;
+                },10)
+                // content.scrollTop = titlePosition;
+            // }
+        })
+
+        // 监听滚动事件高亮对应索引
+        document.getElementById('content').onscroll = e=>{
+            curTop = parseInt(contentMain.style.top);
+            sTop = e.target.scrollTop;
+        }
+
+    </script>
+</body>
+</html>

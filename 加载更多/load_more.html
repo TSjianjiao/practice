@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./load_more.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f180ac;
+        }
+        .item {
+            width: 95%;
+            height: 200px;
+            margin: 0 auto;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 200px;
+            font-size: 40px;
+            background-color: #eeeeee;
+        }
+        .main {
+            position: relative;
+            float: left;
+            height: 600px;
+            width: 45%;
+            margin-left: 50px;
+            overflow-y: auto;
+            background-color: #54da20;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="item">0</div>
+        <div class="item">1</div>
+        <div class="item">2</div>
+        <div class="item">3</div>
+        <div class="item">4</div>
+        <div id="need-more"></div>
+    </div>
+    <div class="main">
+        <div class="item">0</div>
+        <div class="item">1</div>
+        <div class="item">2</div>
+        <div class="item">3</div>
+        <div class="item">4</div>
+        <div id="other-need-more"></div>
+    </div>
+    <div style="clear:both"></div>
+    <script>
+        // console.log(document.getElementById('other-need-more').parentElement);
+        // [...document.querySelectorAll('.main')].forEach(item=>{
+        //     item.onscroll = (e)=>{
+        //         console.log(e)
+        //     }
+        // })
+
+        const loadMore = new LoadMore('#need-more');
+        let index = 4;
+        // this指向实例
+        // 箭头函数不能正确指向 用loadMore.ele代替
+        loadMore.onNeedMore = function (e) {
+            const prev = this.ele.previousElementSibling.cloneNode(true);
+            const parent = this.ele.parentElement;
+            prev.innerHTML = ++index;
+            parent.insertBefore(prev, this.ele)
+        }
+
+        const otherNeedMore = new LoadMore('#other-need-more');
+        otherNeedMore.onNeedMore = function (e) {
+            const prev = this.ele.previousElementSibling.cloneNode(true);
+            prev.innerHTML = ++index;
+            this.parent.insertBefore(prev, this.ele)
+        }
+    </script>
+</body>
+</html>
