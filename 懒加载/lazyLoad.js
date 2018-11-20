@@ -22,24 +22,16 @@ function throttle(fn, ms, args) {
 
 
 /**
- * 获取offset值
- * @description 由于offset值相对于第一个被定位的父级，所以要找到最外层的容器，并叠加他们的offset值
+ * 获取元素距离窗口上下的距离值
+ * @description getBoundingClientRect方法返回距离
  * @param {HTMLElemnt} dom 
- * @returns {Object} 包含offsetTop和offsetLeft的对象
+ * @returns {Object} top和bottom组成的对象
  *  
  */
-function getOffset(dom) {
-    let offsetParent = dom.offsetParent;
-    let sumOffsetTop = dom.offsetTop;
-    let sumOffsetLeft = dom.offsetLeft;
-    if (offsetParent.nodeName !== 'BODY') {
-        let offset = getOffset(offsetParent);
-        sumOffsetTop += offset.top;
-        sumOffsetLeft += offset.left;
-    }
+function getClientRect(dom) {
     return {
-        top: sumOffsetTop,
-        left: sumOffsetLeft
+        top: dom.getBoundingClientRect().top,
+        bottom: dom.getBoundingClientRect().bottom
     }
 }
 
@@ -64,16 +56,14 @@ window.addEventListener('DOMContentLoaded', () => {
         lazyLoad()
         // 滚动事件，函数节流
         window.addEventListener('scroll', throttle(lazyLoad, 300))
+        
         // 懒加载主函数
         function lazyLoad() {
-            // 获取滚动值
-            let sTop = window.scrollY;
-            console.log(sTop)
             imgList.forEach((img, index) => {
-                // 获取offsetTop和left值
-                let offst = getOffset(img);
-                if (sTop >= offst.top - img.offsetHeight * 4 / 3
-                    || viewHeight + sTop >= offst.top * 4 / 3) {
+                // 获取top和bottom值
+                let offst = getClientRect(img);
+                if ((offst.top < viewHeight && offst.top > 0) 
+                    || (offst.bottom < viewHeight && offst.bottom > 0)) {
                     // 满足条件就将src属性写上
                     imgList[index].src = img.getAttribute('load-src');
                     imgList[index].setAttribute('placeholder', '');
