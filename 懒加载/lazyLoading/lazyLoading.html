@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>图片懒加载</title>
+</head>
+	<style type="text/css">
+		li {
+            list-style: none;
+        }
+        img {
+            width: 400px;
+            height: 300px;
+        }
+	</style>
+<body>
+	
+	<ul>
+		<li><img src="" data-src="./imgs/1.jpg" /></li>
+		<li><img src="" data-src="./imgs/2.jpg" /></li>
+		<li><img src="" data-src="./imgs/3.jpg" /></li>
+		<li><img src="" data-src="./imgs/4.jpg" /></li>
+		<li><img src="" data-src="./imgs/5.jpg" /></li>
+		<li><img src="" data-src="./imgs/6.jpg" /></li>
+		<li><img src="" data-src="./imgs/7.jpg" /></li>
+		<li><img src="" data-src="./imgs/8.jpg" /></li>
+		<li><img src="" data-src="./imgs/9.jpg" /></li>
+		<li><img src="" data-src="./imgs/10.jpg" /></li>
+		<li><img src="" data-src="./imgs/11.jpg" /></li>
+		<li><img src="" data-src="./imgs/12.jpg" /></li>
+		<li><img src="" data-src="./imgs/13.jpg" /></li>
+	</ul>
+
+
+	<!-- 引入自己实现的图片懒加载js代码 -->
+	<script type="text/javascript" src="./js/lazyLoading.js"></script>
+
+	<script type="text/javascript">
+		// 当页面加载 页面滚动 或重置窗口时 实例化一个懒加载对象
+		window.onload = window.onresize = window.onscroll = () => {
+            var lazyLoad = new LazyLoad();  //当页面加载或页面滚动或窗口大小改变时实例化一个懒加载对象
+		}
+		
+
+		
+	</script>
+
+</body>
+</html>

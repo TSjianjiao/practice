@@ -6,8 +6,47 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <script src="./fullpage.js"></script>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            background-color: #eb88b6;
+        }
+        body,
+        html {
+            height: 100%;
+        }
+        section {
+            height: 100%;
+            font-size: 200px;
+            font-weight: 600;
+            text-align: center;
+        }
+        section:nth-child(1) {
+            background-color: #20e995;
+        }
+        section:nth-child(2) {
+            background-color: #61b7f0;
+        }
+        section:nth-child(3) {
+            background-color: #ee83f8;
+        }
+        section:nth-child(4) {
+            background-color: #f383b2;
+        }
+        section:nth-child(5) {
+            background-color: #f5a26a;
+        }
+    </style>
 </head>
 <body>
-
+    <section full-page="one">1</section>
+    <section full-page="two">2</section>
+    <section full-page="three">3</section>
+    <section full-page="four">4</section>
+    <section full-page="five">5</section>
+    <script>
+        new FullPage()
+    </script>
 </body>
 </html>
